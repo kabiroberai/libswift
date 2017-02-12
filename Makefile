@@ -29,6 +29,9 @@ install::
 ifeq ($(DEVICE_IP),)
 	@echo "Error: $(MAKE) install requires that you set DEVICE_IP or THEOS_DEVICE_IP in your environment."
 	@exit 1
+ifeq ($(DEVICE_PORT),)
+	@echo “No port specified, using default (22)”
+	$(DEVICE_PORT) = 22
 else
 	@ssh root@$(DEVICE_IP) -p $(DEVICE_PORT) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < $$(cat debs/.latest)
 endif
