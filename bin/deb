@@ -1,0 +1,19 @@
+#!/bin/bash
+
+rm -rf "$STAGE"
+mkdir -p "$STAGE/$INSTALL_PATH" "$STAGE/DEBIAN"
+
+cp control "$STAGE/DEBIAN"
+cp -a versions/$V.* "$STAGE/$INSTALL_PATH"
+
+full_version=$(ls "$STAGE/$INSTALL_PATH" | tail -n1)
+
+sed -i '' -e "s/@@FULL_VERSION@@/$full_version/g; s/@@VERSION@@/$V/g" "$STAGE/DEBIAN/control"
+
+find "$STAGE" -name ".DS_Store" -exec rm "{}" \;
+
+out="./debs/org.swift.libswift$V.deb"
+mkdir -p "debs"
+dpkg-deb -Zlzma -b "$STAGE" "$out"
+
+echo "$out" > debs/.latest

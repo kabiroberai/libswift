@@ -1,0 +1,17 @@
+#!/bin/bash
+
+shopt -s nullglob
+set -e
+
+cd versions
+
+for file in *.pkg; do # extracts dylibs from any .pkg files in "versions"
+	version="${file##swift-}"
+	version="${version%%-*}"
+	echo "Extracting toolchain: $version"
+	package="${file%.*}-package.pkg"
+	xar -xf "$file" "$package/Payload"
+	tar -xzf "$package/Payload" "usr/lib/swift/iphoneos/libswift*.dylib"
+	mv "usr/lib/swift/iphoneos" "$version"
+	rm -rf "$file" "$package" usr
+done

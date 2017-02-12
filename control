@@ -1,0 +1,8 @@
+Package: org.swift.libswift@@VERSION@@
+Name: libswift@@VERSION@@
+Version: @@FULL_VERSION@@
+Section: Developer
+Architecture: iphoneos-arm 
+Description: libswift@@VERSION@@: the swift iOS toolchain.
+Author: Open Source Swift Project <email@domain.whatever>
+Maintainer: kabiroberai & nullpixel <email@domain.whatever>
