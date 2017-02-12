@@ -5,6 +5,7 @@ export STAGE = .stage
 export V
 
 DEVICE_IP ?= $(THEOS_DEVICE_IP)
+DEVICE_PORT ?= $(THEOS_DEVICE_PORT)
 
 package:: package-check extract
 	@bin/deb
@@ -29,5 +30,5 @@ ifeq ($(DEVICE_IP),)
 	@echo "Error: $(MAKE) install requires that you set DEVICE_IP or THEOS_DEVICE_IP in your environment."
 	@exit 1
 else
-	@ssh root@$(DEVICE_IP) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < $$(cat debs/.latest)
+	@ssh root@$(DEVICE_IP) -p $(DEVICE_PORT) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < $$(cat debs/.latest)
 endif
