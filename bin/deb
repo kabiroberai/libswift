@@ -6,7 +6,7 @@ mkdir -p "$STAGE/$INSTALL_PATH" "$STAGE/DEBIAN"
 cp control "$STAGE/DEBIAN"
 cp -a versions/$V.* "$STAGE/$INSTALL_PATH"
 
-full_version=$(ls "$STAGE/$INSTALL_PATH" | tail -n1)
+full_version=$(ls "$STAGE/$INSTALL_PATH" | tail -1)
 
 sed -i '' -e "s/@@FULL_VERSION@@/$full_version/g; s/@@VERSION@@/$V/g" "$STAGE/DEBIAN/control"
 

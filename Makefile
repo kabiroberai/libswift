@@ -2,19 +2,13 @@
 
 export INSTALL_PATH = /var/lib/libswift/
 export STAGE = .stage
-export V
+export V ?= $(shell ls versions|tail -1|cut -d. -f1)
 
 DEVICE_IP ?= $(THEOS_DEVICE_IP)
 DEVICE_PORT ?= $(THEOS_DEVICE_PORT)
 
-package:: package-check extract
+package:: extract
 	@bin/deb
-
-package-check::
-ifeq ($(V),)
-	@echo "Please set V(ersion) in your environment (eg. export V=3)"
-	@exit 1
-endif
 
 tbd:: extract
 	@bin/tbd
@@ -29,9 +23,6 @@ install::
 ifeq ($(DEVICE_IP),)
 	@echo "Error: $(MAKE) install requires that you set DEVICE_IP or THEOS_DEVICE_IP in your environment."
 	@exit 1
-ifeq ($(DEVICE_PORT),)
-	@echo “No port specified, using default (22)”
-	$(DEVICE_PORT) = 22
 else
-	@ssh root@$(DEVICE_IP) -p $(DEVICE_PORT) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < $$(cat debs/.latest)
+	@ssh root@$(DEVICE_IP) -p $(or $(DEVICE_PORT),22) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < $$(cat debs/.latest)
 endif
