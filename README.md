@@ -2,7 +2,7 @@
 
 ## Adding versions
 
-Drop the .pkg toolchain into the versions directory (get toolchains from [here](https://swift.org/download/))
+Run `make copy [SWIFT=<version>] [XCODE=</path/to/Xcode.app>]`
 
 ## Building
 

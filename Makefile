@@ -1,4 +1,4 @@
-.PHONY: deb tbd extract clean install
+.PHONY: copy clean install
 
 export INSTALL_PATH = /var/lib/libswift/
 export STAGE = .stage
@@ -7,14 +7,26 @@ export V ?= $(shell ls versions|tail -1|cut -d. -f1)
 DEVICE_IP ?= $(THEOS_DEVICE_IP)
 DEVICE_PORT ?= $(THEOS_DEVICE_PORT)
 
-package:: extract
+ifeq ($(SWIFT),)
+SWIFT := $(word 4,$(shell swift --version))
+TOOLCHAIN = XcodeDefault
+else
+TOOLCHAIN = Swift_$(SWIFT)
+endif
+
+ifeq ($(XCODE),)
+XCODE := $(shell xcode-select -p)
+else
+XCODE := $(XCODE)/Contents/Developer
+endif
+
+package::
 	@bin/deb
 
-tbd:: extract
-	@bin/tbd
-
-extract::
-	@bin/extract
+copy::
+	@rm -rf versions/$(SWIFT)
+	@mkdir -p versions/$(SWIFT)
+	@cp "$(XCODE)"/Toolchains/$(TOOLCHAIN).xctoolchain/usr/lib/swift/iphoneos/*.dylib versions/$(SWIFT) || rm -rf versions/$(SWIFT)
 
 clean::
 	@rm -rf $(STAGE)
