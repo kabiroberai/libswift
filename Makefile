@@ -24,5 +24,5 @@ ifeq ($(DEVICE_IP),)
 	@echo "Error: $(MAKE) install requires that you set DEVICE_IP or THEOS_DEVICE_IP in your environment."
 	@exit 1
 else
-	@ssh root@$(DEVICE_IP) -p $(or $(DEVICE_PORT),22) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < $$(cat debs/.latest)
+	@ssh root@$(DEVICE_IP) -p $(or $(DEVICE_PORT),22) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < "$$(cat debs/.latest)"
 endif
