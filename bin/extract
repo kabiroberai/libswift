@@ -14,4 +14,7 @@ for file in *.pkg; do # extracts dylibs from any .pkg files in "versions"
 	tar -xzf "$package/Payload" "usr/lib/swift/iphoneos/libswift*.dylib"
 	mv "usr/lib/swift/iphoneos" "$version"
 	rm -rf "$file" "$package" usr
+	for dylib in "$version"/*.dylib; do
+		install_name_tool -id "${INSTALL_PATH%/}/$dylib" "$dylib"
+	done
 done
