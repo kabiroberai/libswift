@@ -17,3 +17,4 @@ mkdir -p "debs"
 dpkg-deb -Zlzma -b "$STAGE" "$out"
 
 echo "$out" > debs/.latest
+rm -rf "$STAGE"
