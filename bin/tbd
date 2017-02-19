@@ -10,7 +10,10 @@ for dir in versions/*; do
 	for file in "$dir"/*; do
 		filename=$(basename "$file")
 		filename=${filename%.*}
-		bin/tbdump "$file" > "$tbd_dir/$filename.tbd"
+		cp "$file" "$tbd_dir/stage.dylib" # stage.dylib can be modified before dumping its tbd
+		install_name_tool -id "${INSTALL_PATH%/}/$version/$filename.dylib" "$tbd_dir/stage.dylib"
+		bin/tbdump "$tbd_dir/stage.dylib" > "$tbd_dir/$filename.tbd"
 		echo "Dumped $version/$filename.tbd"
 	done
+	rm "$tbd_dir/stage.dylib"
 done
