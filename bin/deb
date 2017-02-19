@@ -1,14 +1,16 @@
 #!/bin/bash
 
+function replace { sed -i '' -e "s/@@$1@@/$2/g" "$STAGE/DEBIAN/control"; }
+
 rm -rf "$STAGE"
 mkdir -p "$STAGE/$INSTALL_PATH" "$STAGE/DEBIAN"
 
 cp control "$STAGE/DEBIAN"
 cp -a versions/$V.* "$STAGE/$INSTALL_PATH"
 
-full_version=$(ls "$STAGE/$INSTALL_PATH" | tail -1)
-
-sed -i '' -e "s/@@FULL_VERSION@@/$full_version/g; s/@@VERSION@@/$V/g" "$STAGE/DEBIAN/control"
+replace "FULL_VERSION" "$(ls "$STAGE/$INSTALL_PATH" | tail -1)"
+replace "VERSION" "$V"
+replace "INSTALLED_SIZE" "$(du -I DEBIAN -ks "$STAGE" | cut -f1)"
 
 find "$STAGE" -name ".DS_Store" -exec rm "{}" \;
 
