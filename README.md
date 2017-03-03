@@ -19,6 +19,4 @@ If you don't set V, the latest major version will be used (eg. 3).
 
 ## Installing the deb
 
-    make install THEOS_DEVICE_IP=<ip> [THEOS_DEVICE_PORT=<port>]
-
-If `THEOS_DEVICE_PORT` is not set, port 22 will be used.
+    make install THEOS_DEVICE_IP=<ip>
