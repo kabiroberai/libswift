@@ -1,4 +1,4 @@
-INSTALL_PATH = /var/lib/libswift
+export INSTALL_PATH = /var/lib/libswift
 NULL_NAME = libswift
 override THEOS_PACKAGE_NAME = org.swift.libswift$(V)
 
@@ -35,10 +35,9 @@ stage::
 	cp -a $(VERSIONS) $(THEOS_STAGING_DIR)/$(INSTALL_PATH)$(ECHO_END)
 
 before-package::
-	$(ECHO_NOTHING)sed -i "" -e "s/🔢/$(V)/g" "$(THEOS_STAGING_DIR)/DEBIAN/control"$(ECHO_END)
+	$(ECHO_NOTHING)sed -i "" -e "s/🔢/$(V)/g" $(THEOS_STAGING_DIR)/DEBIAN/control$(ECHO_END)
 
+ifeq ($(VERSIONS),)
 internal-package-check::
-	$(ECHO_NOTHING)if [[ -z "$(VERSIONS)" ]]; then \
-		$(PRINT_FORMAT_ERROR) "Please extract a toolchain before packaging."; \
-		exit 1; \
-	fi$(ECHO_END)
+	$(ECHO_NOTHING)$(PRINT_FORMAT_ERROR) "Please extract a toolchain before packaging.";exit 1$(ECHO_END)
+endif
