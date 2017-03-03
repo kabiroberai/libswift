@@ -1,6 +1,4 @@
-debs
+.theos
+packages
+versions
 tbds
-.stage
-
-versions/*
-!versions/.keep

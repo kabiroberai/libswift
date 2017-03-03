@@ -1,9 +1,7 @@
-Package: org.swift.libswift@@VERSION@@
-Name: libswift@@VERSION@@
-Version: @@FULL_VERSION@@
+Package: com.kabiroberai.libswift🔢
+Name: libswift🔢
 Section: Developer
-Architecture: iphoneos-arm 
-Description: libswift@@VERSION@@: the swift iOS toolchain.
-Author: Open Source Swift Project <email@domain.whatever>
-Maintainer: kabiroberai & nullpixel <email@domain.whatever>
-Installed-Size: @@INSTALLED_SIZE@@
+Architecture: iphoneos-arm
+Description: libswift🔢: the swift iOS toolchain.
+Author: Apple <code-owners@swift.org>
+Maintainer: Kabir Oberai <something@example.com>

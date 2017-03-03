@@ -1,28 +1,44 @@
-.PHONY: deb tbd extract clean install
+INSTALL_PATH = /var/lib/libswift
+NULL_NAME = libswift
+override THEOS_PACKAGE_NAME = org.swift.libswift$(V)
 
-export INSTALL_PATH = /var/lib/libswift/
-export STAGE = .stage
-export V ?= $(shell ls versions|tail -1|cut -d. -f1)
+V ?= $(firstword $(subst ., ,$(notdir $(lastword $(wildcard versions/*)))))
+VERSIONS = $(wildcard versions/$(V)*)
+PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))
 
-DEVICE_IP ?= $(THEOS_DEVICE_IP)
-DEVICE_PORT ?= $(THEOS_DEVICE_PORT)
+include $(THEOS)/makefiles/common.mk
+include $(THEOS_MAKE_PATH)/null.mk
 
-package:: extract
-	@bin/deb
+.PHONY: tbd FORCE
 
-tbd:: extract
+tbd::
 	@bin/tbd
 
-extract::
-	@bin/extract
+%.pkg:: FORCE
+	$(ECHO_NOTHING)file=$(notdir $*); \
+	mkdir -p versions; \
+	cp $@ versions 2>/dev/null; \
+	cd versions; \
+	version=$(patsubst swift-%-RELEASE-osx,%,$(notdir $*)); \
+	$(PRINT_FORMAT_STAGE) 2 "Extracting toolchain: $$version"; \
+	package="$$file-package.pkg"; \
+	xar -xf "$$file.pkg" "$$package/Payload"; \
+	tar -xzf "$$package/Payload" "usr/lib/swift/iphoneos/libswift*.dylib"; \
+	rm -rf "$$version"; \
+	mv usr/lib/swift/iphoneos "$$version"; \
+	rm -rf "$$file.pkg" "$$package" usr$(ECHO_END)
 
-clean::
-	@rm -rf $(STAGE)
+FORCE:
 
-install::
-ifeq ($(DEVICE_IP),)
-	@echo "Error: $(MAKE) install requires that you set DEVICE_IP or THEOS_DEVICE_IP in your environment."
-	@exit 1
-else
-	@ssh root@$(DEVICE_IP) -p $(or $(DEVICE_PORT),22) "cat > /tmp/_theos_install.deb; dpkg -i /tmp/_theos_install.deb && rm /tmp/_theos_install.deb" < "$$(cat debs/.latest)"
-endif
+stage::
+	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PATH); \
+	cp -a $(VERSIONS) $(THEOS_STAGING_DIR)/$(INSTALL_PATH)$(ECHO_END)
+
+before-package::
+	$(ECHO_NOTHING)sed -i "" -e "s/🔢/$(V)/g" "$(THEOS_STAGING_DIR)/DEBIAN/control"$(ECHO_END)
+
+internal-package-check::
+	$(ECHO_NOTHING)if [[ -z "$(VERSIONS)" ]]; then \
+		$(PRINT_FORMAT_ERROR) "Please extract a toolchain before packaging."; \
+		exit 1; \
+	fi$(ECHO_END)

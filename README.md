@@ -1,17 +1,24 @@
 # libswift
 
+## Installation
+
+1. [Install Theos](https://github.com/theos/theos/wiki/Installation)
+2. Clone this repository somewhere on your computer
+
 ## Adding versions
 
-Drop the .pkg toolchain into the versions directory (get toolchains from [here](https://swift.org/download/))
+Download a .pkg toolchain from [here](https://swift.org/download/), and run the following command:
 
-## Building
+    make </path/to/toolchain.pkg>
 
-    make [V=<version>]
+## Packaging the deb
+
+    make package [V=<version>]
 
 If you don't set V, the latest major version will be used (eg. 3).
 
-## Installing
+## Installing the deb
 
-    make install [THEOS_]DEVICE_IP=<ip> [[THEOS_]DEVICE_PORT=<port>]
+    make install THEOS_DEVICE_IP=<ip> [THEOS_DEVICE_PORT=<port>]
 
-If neither `DEVICE_PORT` nor `THEOS_DEVICE_PORT` is set, port 22 will be used.
+If `THEOS_DEVICE_PORT` is not set, port 22 will be used.
