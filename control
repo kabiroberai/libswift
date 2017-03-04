@@ -1,7 +1,7 @@
-Package: com.kabiroberai.libswift🔢
+Package: libswift🔢
 Name: libswift🔢
 Section: Developer
 Architecture: iphoneos-arm
 Description: libswift🔢: the swift iOS toolchain.
-Author: Apple <code-owners@swift.org>
+Author: Kabir Oberai <something@example.com>
 Maintainer: Kabir Oberai <something@example.com>

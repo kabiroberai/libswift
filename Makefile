@@ -1,6 +1,6 @@
 export INSTALL_PATH = /var/lib/libswift
 NULL_NAME = libswift
-override THEOS_PACKAGE_NAME = org.swift.libswift$(V)
+override THEOS_PACKAGE_NAME = libswift$(V)
 
 V ?= $(firstword $(subst ., ,$(notdir $(lastword $(wildcard versions/*)))))
 VERSIONS = $(wildcard versions/$(V)*)
