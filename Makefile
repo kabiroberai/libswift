@@ -1,10 +1,11 @@
 export INSTALL_PATH = /var/lib/libswift
 NULL_NAME = libswift
 override THEOS_PACKAGE_NAME = libswift$(V)
+BUILD = 1
 
 V ?= $(firstword $(subst ., ,$(notdir $(lastword $(wildcard versions/*)))))
 VERSIONS = $(wildcard versions/$(V)*)
-PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))
+PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))-$(BUILD)
 
 include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/null.mk
