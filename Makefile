@@ -27,7 +27,13 @@ tbd::
 	tar -xzf "$$package/Payload" "usr/lib/swift/iphoneos/libswift*.dylib"; \
 	rm -rf "$$version"; \
 	mv usr/lib/swift/iphoneos "$$version"; \
-	rm -rf "$$file.pkg" "$$package" usr$(ECHO_END)
+	rm -rf "$$file.pkg" "$$package" usr; \
+	for dylib in "$$version"/*; do \
+		for orig in "$$version"/*; do \
+			command="$$command -change @rpath/$$(basename $$orig) $(INSTALL_PATH)/$$version/$$(basename $$orig)"; \
+		done; \
+		install_name_tool -id $(INSTALL_PATH)/$$version/$$(basename $$dylib) $$command $$dylib; \
+	done$(ECHO_END)
 
 FORCE:
 
