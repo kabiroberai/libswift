@@ -2,6 +2,6 @@ Package: libswift🔢
 Name: libswift🔢
 Section: Developer
 Architecture: iphoneos-arm
-Description: libswift🔢: the swift iOS toolchain.
-Author: Kabir Oberai <something@example.com>
-Maintainer: Kabir Oberai <something@example.com>
+Description: libswift dylibs for iOS
+Author: Kabir Oberai <support@kabiroberai.com>
+Maintainer: Kabir Oberai <support@kabiroberai.com>
