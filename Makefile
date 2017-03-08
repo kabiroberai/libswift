@@ -39,7 +39,7 @@ FORCE:
 
 stage::
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PATH); \
-	cp -a $(VERSIONS) $(THEOS_STAGING_DIR)/$(INSTALL_PATH); \
+	rsync -ra $(VERSIONS) $(THEOS_STAGING_DIR)/$(INSTALL_PATH) $(_THEOS_RSYNC_EXCLUDE_COMMANDLINE); \
 	for version in $(THEOS_STAGING_DIR)/$(INSTALL_PATH)/*; do \
 		echo "The license for Swift can be found at https://swift.org/LICENSE.txt."$$'\n'"Modifications: Changed @rpath to $(INSTALL_PATH)/$$(basename $$version) in the libswift dylibs." > $$version/swift_license.txt; \
 	done$(ECHO_END)
