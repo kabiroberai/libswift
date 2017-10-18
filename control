@@ -1,6 +1,6 @@
 Package: libswift🔢
 Name: libswift🔢
-Section: Developer
+Section: Development
 Architecture: iphoneos-arm
 Description: libswift dylibs for iOS
 Author: Kabir Oberai <support@kabiroberai.com>
