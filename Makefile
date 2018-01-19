@@ -10,11 +10,9 @@ PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))-$(BUILD)
 include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/null.mk
 
-.PHONY: tbd FORCE
+.PHONY: FORCE
 
-tbd::
-	@bin/tbd
-
+# unpack the pkg and change each dylib's compatibility version to 1.0.0
 %.pkg:: FORCE
 	$(ECHO_NOTHING)file=$(notdir $*); \
 	mkdir -p versions; \
@@ -28,12 +26,7 @@ tbd::
 	rm -rf "$$version"; \
 	mv usr/lib/swift/iphoneos "$$version"; \
 	rm -rf "$$file.pkg" "$$package" usr; \
-	for dylib in "$$version"/*; do \
-		while read orig; do \
-			command="$$command -change $$orig $(INSTALL_PATH)/$$version/$$(basename $$orig)"; \
-		done <<< "$$(otool -L "$$dylib" | grep -o "@rpath/libswift.*\.dylib" | sort -u)"; \
-		install_name_tool -id $(INSTALL_PATH)/$$version/$$(basename $$dylib) $$command $$dylib; \
-	done$(ECHO_END)
+	../libswift_edit "$$version"/*$(ECHO_END)
 
 FORCE:
 
@@ -41,7 +34,7 @@ stage::
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PATH); \
 	rsync -ra $(VERSIONS) $(THEOS_STAGING_DIR)/$(INSTALL_PATH) $(_THEOS_RSYNC_EXCLUDE_COMMANDLINE); \
 	for version in $(THEOS_STAGING_DIR)/$(INSTALL_PATH)/*; do \
-		echo "The license for Swift can be found at https://swift.org/LICENSE.txt."$$'\n'"Modifications: Changed @rpath to $(INSTALL_PATH)/$$(basename $$version) in the libswift dylibs." > $$version/NOTICE.txt; \
+		cp NOTICE.txt $$version/; \
 	done$(ECHO_END)
 
 before-package::

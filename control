@@ -1,7 +1,8 @@
-Package: libswift🔢
+Package: org.swift.libswift🔢
 Name: libswift🔢
 Section: Development
 Architecture: iphoneos-arm
 Description: libswift dylibs for iOS
 Author: Kabir Oberai <support@kabiroberai.com>
 Maintainer: Kabir Oberai <support@kabiroberai.com>
+Depends: firmware (>= 7.0)
