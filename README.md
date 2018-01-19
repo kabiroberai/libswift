@@ -13,9 +13,7 @@ Download a .pkg toolchain from [here](https://swift.org/download/), and run the 
 
     make </path/to/toolchain.pkg>
 
-## Debs
-
-### Packaging
+### Packaging as a .deb
 
     make package [V=<version>]
 
@@ -24,22 +22,6 @@ If you don't set `V`, the latest major version will be used (eg. 4).
 ### Installing
 
     make install THEOS_DEVICE_IP=<ip>
-
-## TBDs
-
-### Generating
-
-    make tbd
-
-This command will generate tbd files for all unpacked libswift versions, and store them in `tbds/<version>`.
-
-### Installing
-
-If Theos does not already contain the required Swift tbd files, you may run the following command to add them:
-
-    cp -r tbds/VERSION $THEOS/vendor/lib/libswift/
-
-Replace `VERSION` with the Swift version of which you wish to copy the tbd files.
 
 ## Template
 
