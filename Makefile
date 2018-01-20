@@ -1,7 +1,7 @@
-export INSTALL_PATH = /var/lib/libswift
-NULL_NAME = libswift
+INSTALL_PATH := /var/lib/libswift
+NULL_NAME := libswift
 override THEOS_PACKAGE_NAME = libswift$(V)
-BUILD = 1
+BUILD := 1
 
 V ?= $(firstword $(subst ., ,$(notdir $(lastword $(wildcard versions/*)))))
 VERSIONS = $(wildcard versions/$(V)*)
@@ -12,21 +12,22 @@ include $(THEOS_MAKE_PATH)/null.mk
 
 .PHONY: FORCE
 
+PACKAGE_LIBSWIFT_PATH := usr/lib/swift/iphoneos
+FILE = $(notdir $*)
+PACKAGE = $(FILE)-package.pkg
+VERSION = $(patsubst swift-%-RELEASE-osx,%,$(FILE))
+
 # unpack the pkg and change each dylib's compatibility version to 1.0.0
 %.pkg:: FORCE
-	$(ECHO_NOTHING)file=$(notdir $*); \
-	mkdir -p versions; \
-	cp $@ versions 2>/dev/null; \
+	$(ECHO_NOTHING)mkdir -p versions; \
 	cd versions; \
-	version=$(patsubst swift-%-RELEASE-osx,%,$(notdir $*)); \
-	$(PRINT_FORMAT_STAGE) 2 "Extracting toolchain: $$version"; \
-	package="$$file-package.pkg"; \
-	xar -xf "$$file.pkg" "$$package/Payload"; \
-	tar -xzf "$$package/Payload" "usr/lib/swift/iphoneos/libswift*.dylib"; \
-	rm -rf "$$version"; \
-	mv usr/lib/swift/iphoneos "$$version"; \
-	rm -rf "$$file.pkg" "$$package" usr; \
-	../libswift_edit "$$version"/*$(ECHO_END)
+	$(PRINT_FORMAT_STAGE) 2 "Extracting toolchain: $(VERSION)"; \
+	xar -xf "$@" "$(PACKAGE)/Payload"; \
+	tar -xzf "$(PACKAGE)/Payload" "$(PACKAGE_LIBSWIFT_PATH)/libswift*.dylib"; \
+	rm -rf "$(VERSION)" "$(PACKAGE)"; \
+	mv "$(PACKAGE_LIBSWIFT_PATH)" "$(VERSION)"; \
+	rm -rf usr; \
+	../libswift_edit "$(VERSION)"/*$(ECHO_END)
 
 FORCE:
 
