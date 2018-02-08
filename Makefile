@@ -1,10 +1,8 @@
 INSTALL_PATH := /var/lib/libswift
 NULL_NAME := libswift
-override THEOS_PACKAGE_NAME = libswift$(V)
 BUILD := 1
 
-V ?= $(firstword $(subst ., ,$(notdir $(lastword $(wildcard versions/*)))))
-VERSIONS = $(wildcard versions/$(V)*)
+VERSIONS = $(wildcard versions/4.*)
 PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))-$(BUILD)
 
 include $(THEOS)/makefiles/common.mk
@@ -37,9 +35,6 @@ stage::
 	for version in $(THEOS_STAGING_DIR)/$(INSTALL_PATH)/*; do \
 		cp NOTICE.txt $$version/; \
 	done$(ECHO_END)
-
-before-package::
-	$(ECHO_NOTHING)sed -i "" -e "s/🔢/$(V)/g" $(THEOS_STAGING_DIR)/DEBIAN/control$(ECHO_END)
 
 ifeq ($(VERSIONS),)
 internal-package-check::
