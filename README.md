@@ -15,9 +15,7 @@ Download a .pkg toolchain from [here](https://swift.org/download/), and run the 
 
 ### Packaging as a .deb
 
-    make package [V=<version>]
-
-If you don't set `V`, the latest major version will be used (eg. 4).
+    make package
 
 ### Installing
 

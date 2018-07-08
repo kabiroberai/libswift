@@ -1,6 +1,6 @@
 INSTALL_PATH := /usr/lib/libswift
 NULL_NAME := libswift
-BUILD := 3
+BUILD := 1
 
 VERSIONS = $(wildcard versions/4.*)
 PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))-$(BUILD)
