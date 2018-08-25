@@ -1,6 +1,6 @@
 INSTALL_PATH := /usr/lib/libswift
 NULL_NAME := libswift
-BUILD := 1
+BUILD := 2
 
 VERSIONS = $(wildcard versions/4.*)
 PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))-$(BUILD)
@@ -25,7 +25,8 @@ VERSION = $(patsubst swift-%-RELEASE-osx,%,$(FILE))
 	rm -rf "$(VERSION)" "$(PACKAGE)"; \
 	mv "$(PACKAGE_LIBSWIFT_PATH)" "$(VERSION)"; \
 	rm -rf usr; \
-	../libswift_edit "$(VERSION)"/*$(ECHO_END)
+	../libswift_edit "$(VERSION)"/*; \
+	ldid -S../ent.xml "$(VERSION)"/*$(ECHO_END)
 
 FORCE:
 
