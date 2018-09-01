@@ -26,7 +26,7 @@ VERSION = $(patsubst swift-%-RELEASE-osx,%,$(FILE))
 	mv "$(PACKAGE_LIBSWIFT_PATH)" "$(VERSION)"; \
 	rm -rf usr; \
 	../libswift_edit "$(VERSION)"/*; \
-	ldid -S../ent.xml "$(VERSION)"/*$(ECHO_END)
+	ldid -S "$(VERSION)"/*$(ECHO_END)
 
 FORCE:
 
