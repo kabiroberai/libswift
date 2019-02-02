@@ -1,5 +1,5 @@
-Package: com.modmyi.libswift4
-Name: libswift4
+Package: org.swift.libswift
+Name: libswift
 Section: Development
 Architecture: iphoneos-arm
 Description: libswift dylibs for iOS
