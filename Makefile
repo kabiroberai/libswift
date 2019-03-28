@@ -7,6 +7,11 @@ VERSION ?= $(notdir $(lastword $(VERSIONS)))
 VERSION_PATH = versions/$(VERSION)
 PACKAGE_VERSION = $(VERSION)-$(BUILD)$(_LOCAL_PACKAGE_VERSION_SUFFIX)
 
+XCODE = $(shell xcode-select -p)/../..
+XCODE_USR = $(XCODE)/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr
+EXTRACT_VERSION = $(shell $(XCODE_USR)/bin/swift --version | head -1 | cut -f4 -d" ")
+EXTRACT_DIR = versions/$(EXTRACT_VERSION)
+
 include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/null.mk
 
@@ -14,27 +19,13 @@ ifeq ($(call __theos_bool,$(or $(debug),$(DEBUG))),$(_THEOS_TRUE))
 	_LOCAL_PACKAGE_VERSION_SUFFIX = +debug
 endif
 
-.PHONY: FORCE
+.PHONY: FORCE extract
 FORCE:
 
-PACKAGE_LIBSWIFT_PATH := usr/lib/swift/iphoneos
-FILE = $(notdir $*)
-PACKAGE = $(FILE)-package.pkg
-TOOLCHAIN_FULL_VERSION = $(patsubst swift-%-osx,%,$(FILE))
-TOOLCHAIN_VERSION = $(firstword $(subst -, ,$(TOOLCHAIN_FULL_VERSION)))
-
-# unpack the pkg and change each dylib's compatibility version to 1.0.0
-%.pkg:: FORCE
-	$(ECHO_NOTHING)mkdir -p versions; \
-	cd versions; \
-	$(PRINT_FORMAT_STAGE) 2 "Extracting toolchain: $(TOOLCHAIN_VERSION)"; \
-	xar -xf "$@" "$(PACKAGE)/Payload"; \
-	tar -xzf "$(PACKAGE)/Payload" "$(PACKAGE_LIBSWIFT_PATH)/libswift*.dylib"; \
-	rm -rf "$(TOOLCHAIN_VERSION)" "$(PACKAGE)"; \
-	mv "$(PACKAGE_LIBSWIFT_PATH)" "$(TOOLCHAIN_VERSION)"; \
-	rm -rf usr; \
-	../libswift_edit "$(TOOLCHAIN_VERSION)"/*; \
-	ldid -S "$(TOOLCHAIN_VERSION)"/*$(ECHO_END)
+extract::
+	$(ECHO_NOTHING)mkdir -p $(EXTRACT_DIR)$(ECHO_END)
+	$(ECHO_NOTHING)rsync -ra "$(XCODE_USR)/lib/swift/iphoneos"/libswift*.dylib $(EXTRACT_DIR) $(_THEOS_RSYNC_EXCLUDE_COMMANDLINE)$(ECHO_END)
+	$(ECHO_NOTHING)ldid -S $(EXTRACT_DIR)/*$(ECHO_END)
 
 stage::
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PATH)$(ECHO_END)

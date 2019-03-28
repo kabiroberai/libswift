@@ -1,2 +1,1 @@
 The license for Swift can be found at https://swift.org/LICENSE.txt.
-Modifications: Changed compatibility_version of each libswift dylib to 1.0.0

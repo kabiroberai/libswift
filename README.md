@@ -9,9 +9,9 @@ A tool to interact with Swift toolchains
 
 ## Adding versions
 
-Download a .pkg toolchain from [here](https://swift.org/download/), and run the following command:
+Ensure that you have the version of Xcode associated with your toolchain, and then run the following
 
-    make </path/to/toolchain.pkg>
+    make [XCODE=/path/to/Xcode.app (default: /Applications/Xcode.app)]
 
 ### Packaging as a .deb
 
