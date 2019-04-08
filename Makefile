@@ -1,43 +1,20 @@
-INSTALL_PATH := /usr/lib/libswift
 NULL_NAME := libswift
-BUILD := 2
+INSTALL_PATH := /usr/lib/libswift/stable
+OBJ_PATH = $(THEOS_OBJ_DIR)
 
-VERSIONS = $(wildcard versions/4.*)
-PACKAGE_VERSION = $(lastword $(notdir $(VERSIONS)))-$(BUILD)
+XCODE ?= $(shell xcode-select -p)/../..
+XCODE_USR = $(XCODE)/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr
 
 include $(THEOS)/makefiles/common.mk
 include $(THEOS_MAKE_PATH)/null.mk
 
-.PHONY: FORCE
-
-PACKAGE_LIBSWIFT_PATH := usr/lib/swift/iphoneos
-FILE = $(notdir $*)
-PACKAGE = $(FILE)-package.pkg
-VERSION = $(patsubst swift-%-RELEASE-osx,%,$(FILE))
-
-# unpack the pkg and change each dylib's compatibility version to 1.0.0
-%.pkg:: FORCE
-	$(ECHO_NOTHING)mkdir -p versions; \
-	cd versions; \
-	$(PRINT_FORMAT_STAGE) 2 "Extracting toolchain: $(VERSION)"; \
-	xar -xf "$@" "$(PACKAGE)/Payload"; \
-	tar -xzf "$(PACKAGE)/Payload" "$(PACKAGE_LIBSWIFT_PATH)/libswift*.dylib"; \
-	rm -rf "$(VERSION)" "$(PACKAGE)"; \
-	mv "$(PACKAGE_LIBSWIFT_PATH)" "$(VERSION)"; \
-	rm -rf usr; \
-	../libswift_edit "$(VERSION)"/*; \
-	ldid -S "$(VERSION)"/*$(ECHO_END)
-
-FORCE:
+all::
+	$(ECHO_NOTHING)rm -rf $(OBJ_PATH)$(ECHO_END)
+	$(ECHO_NOTHING)mkdir -p $(OBJ_PATH)$(ECHO_END)
+	$(ECHO_NOTHING)rsync -ra "$(XCODE_USR)"/lib/swift/iphoneos/libswift*.dylib $(OBJ_PATH)$(ECHO_END)
+	$(ECHO_NOTHING)ldid -S $(OBJ_PATH)/*$(ECHO_END)
 
 stage::
-	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PATH); \
-	rsync -ra $(VERSIONS) $(THEOS_STAGING_DIR)/$(INSTALL_PATH) $(_THEOS_RSYNC_EXCLUDE_COMMANDLINE); \
-	for version in $(THEOS_STAGING_DIR)/$(INSTALL_PATH)/*; do \
-		cp NOTICE.txt $$version/; \
-	done$(ECHO_END)
-
-ifeq ($(VERSIONS),)
-internal-package-check::
-	$(ECHO_NOTHING)$(PRINT_FORMAT_ERROR) "Please extract a toolchain before packaging.";exit 1$(ECHO_END)
-endif
+	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PATH)$(ECHO_END)
+	$(ECHO_NOTHING)rsync -ra $(OBJ_PATH)/ $(THEOS_STAGING_DIR)/$(INSTALL_PATH) $(_THEOS_RSYNC_EXCLUDE_COMMANDLINE)$(ECHO_END)
+	$(ECHO_NOTHING)cp NOTICE.txt $(THEOS_STAGING_DIR)/$(INSTALL_PATH)$(ECHO_END)

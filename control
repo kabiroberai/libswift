@@ -1,8 +1,9 @@
-Package: com.modmyi.libswift4
-Name: libswift4
+Package: org.swift.libswift
+Name: libswift (stable)
 Section: Development
 Architecture: iphoneos-arm
-Description: libswift dylibs for iOS
-Author: Kabir Oberai <support@kabiroberai.com>
-Maintainer: Kabir Oberai <support@kabiroberai.com>
+Description: Swift runtime for iOS
+Author: Kabir Oberai <oberai.kabir+libswift@gmail.com>
+Maintainer: Kabir Oberai <oberai.kabir+libswift@gmail.com>
 Depends: firmware (>= 7.0)
+Version: 5.0

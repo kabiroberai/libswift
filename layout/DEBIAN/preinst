@@ -1,6 +1,7 @@
 #!/bin/bash
+mkdir -p /usr/lib/libswift
 if [[ -x /usr/libexec/cydia/move.sh ]]; then
-	bash /usr/libexec/cydia/move.sh /usr/lib/libswift
+	bash /usr/libexec/cydia/move.sh /usr/lib/libswift/stable
 else
 	:
 fi
