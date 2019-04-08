@@ -7,15 +7,11 @@ A tool to interact with Swift toolchains
 1. [Install Theos](https://github.com/theos/theos/wiki/Installation)
 2. Clone this repository somewhere on your computer
 
-## Adding versions
+### Packaging
 
-Ensure that you have the version of Xcode associated with your toolchain, and then run the following
+    make package [XCODE=/path/to/Xcode.app] [FINALPACKAGE=1]
 
-    make [XCODE=/path/to/Xcode.app (default: /Applications/Xcode.app)]
-
-### Packaging as a .deb
-
-    make package [VERSION=<swift version>] [FINALPACKAGE=1]
+The Swift stdlib will be copied from the path specified by the `XCODE` variable.
 
 ### Installing
 
