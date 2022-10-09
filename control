@@ -6,4 +6,4 @@ Description: Swift runtime for iOS
 Author: Kabir Oberai <oberai.kabir+libswift@gmail.com>
 Maintainer: Kabir Oberai <oberai.kabir+libswift@gmail.com>
 Depends: firmware (>= 7.0)
-Version: 5.0
+Version: 5.7
