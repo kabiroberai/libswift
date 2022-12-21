@@ -1,12 +1,28 @@
 name: Build
 
 on:
-  push:
-    tags:
-    - '*'
+  - push
+  - workflow_dispatch
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Draft Release
+          body: ''
+          draft: true
+
   build:
+    needs: create_release
     runs-on: macos-12
     steps:
       - uses: actions/checkout@main
@@ -15,39 +31,7 @@ jobs:
         with:
           extra_args: "XCODE=/Applications/Xcode_14.0.1.app FINALPACKAGE=1"
 
-      - uses: actions/upload-artifact@main
-        with:
-          name: package
-          path: packages/*.deb
-
-  upload:
-    needs: build
-    runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@main
-      - name: Download Artifact
-        uses: actions/download-artifact@main
-
-      - name: Set TAG Variable
-        run: |
-          echo "TAG=${GITHUB_REF#refs/tags/}" >> "$GITHUB_ENV"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-          body: ''
-          draft: true
-
       - name: Attach Deb To Release
         run: |
           set -x
-          debs=()
-          for deb in **/*.deb; do
-            debs+=("-a" "$deb")
-          done
-          hub release edit "${debs[@]}" -m "$TAG" "$TAG"
+          gh release upload ${GITHUB_REF##*/} packages/*.deb
